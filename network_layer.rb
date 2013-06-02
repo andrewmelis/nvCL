@@ -10,23 +10,14 @@ class NetworkLayer
   attr_accessor :session, :client
   attr_reader :APP_KEY, :APP_SECRET, :ACCESS_TYPE
 
-
   def initialize
     @APP_KEY = 'aonbfj90mc8ecnl'
     @APP_SECRET = 'zjdti8y6bubt6rw'
-
     @ACCESS_TYPE = :app_folder
+
     load_session
     @client = DropboxClient.new(@session, @ACCESS_TYPE)
   end
-
-  #UPLOADING FILES###
-  def upload
-    file = File.open('working-draft.txt')
-    response = @client.put_file('/magnum-opus.txt',file)
-    puts "uploaded:", response.inspect
-  end
-
 
   def load_session
     if !@session.nil? && @session.authorized?
@@ -39,7 +30,6 @@ class NetworkLayer
     if(File.exists?("#{home}/bin/nvCL/token.txt"))
       puts "loading credentials"
       token_string = File.open("#{home}/bin/nvCL/token.txt").read
-      puts token_string
       @session = DropboxSession.deserialize(token_string)
     else 
       puts "creating new credentials"
@@ -83,11 +73,28 @@ class NetworkLayer
       Dir.mkdir("#{home}/bin/nvCL")
     end
 
-    puts @session.serialize
-    File.new("#{home}/bin/nvCL/token.txt", 'w') do |f|
-      f.puts @session.serialize
+    token_string = @session.serialize
+    File.open("#{home}/bin/nvCL/token.txt", 'w') do |f|
+      f.puts token_string
     end
 
+  end
+
+  #uploading files
+  def upload
+    file = File.open('working-draft.txt')
+    response = @client.put_file('/magnum-opus.txt',file)
+    puts "uploaded:", response.inspect
+  end
+
+  def list_folders
+    file_metadata = @client.metadata('/')
+    puts "metadata: ", file_metadata
+  end
+
+  def download
+    out = client.get_file('/magnum-opus.txt')
+    File.open('./magnum-opus.txt', "w"){|f| f.puts out}
   end
 
 end
