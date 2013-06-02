@@ -1,9 +1,4 @@
 #from https://www.dropbox.com/developers/app_info/321120
-
-
-###AUTHENTICATING THE APP###
-
-# Include the Dropbox SDK libraries
 require 'dropbox_sdk'
 
 class NetworkLayer
@@ -19,13 +14,14 @@ class NetworkLayer
     @client = DropboxClient.new(@session, @ACCESS_TYPE)
   end
 
+  ###AUTHENTICATING THE APP### 
   def load_session
     if !@session.nil? && @session.authorized?
       return
     end
 
     #get unix $HOME directory
-    home = `echo $HOME`.chomp!
+    home = Dir.home
 
     if(File.exists?("#{home}/bin/nvCL/token.txt"))
       puts "loading credentials"
@@ -81,20 +77,94 @@ class NetworkLayer
   end
 
   #uploading files
-  def upload
-    file = File.open('working-draft.txt')
-    response = @client.put_file('/magnum-opus.txt',file)
-    puts "uploaded:", response.inspect
+  #will overwrite a file of the same name
+  #do I want to enable sending string functionality?
+  def upload(filename)
+    begin
+      file = File.open("#{filename}")
+      response = @client.put_file("/#{filename}",file,true)
+      puts "uploaded: #{filename}"
+    rescue
+      puts "#{filename} not found"
+    end
   end
 
-  def list_folders
+  #helper function used in list_contents() and search()
+  def print_metadata(metadata)
+
+  end
+
+  def list_contents
+    puts "listing contents of dropbox nvCL directory"
     file_metadata = @client.metadata('/')
-    puts "metadata: ", file_metadata
+    if file_metadata['contents'].length>0
+      file_metadata['contents'].each do |i|
+        puts "> #{i['path'].sub('/','')}"
+      end
+    else
+      puts "no notes in your nvCL directory"
+    end    
   end
 
-  def download
-    out = client.get_file('/magnum-opus.txt')
-    File.open('./magnum-opus.txt', "w"){|f| f.puts out}
+  #retrieves file for quick, "in-place" editing
+  #TODO come back to this
+  def retrieve(filename)
+    puts "retrieving #{filename} "
+    out = get(filename)
+    #pass the raw data back to another layer in this case? in all download cases? perhaps called process layer?
+    unless out==false
+      require 'tmpdir'
+      Dir.m
+      File.open("#{filename}", "w"){|f| f.puts out} #current iteration simply downloads file. must open in tmp vim file soon
+    end
+  end
+
+  #saves to current local directory
+  def download(filename)
+    puts "downloading #{filename} to local disk"
+    out = get(filename)
+    unless out==false
+      File.open("#{filename}", "w"){|f| f.puts out} 
+    end
+  end
+
+  #retrieves temporary public-facing url for given filename
+  def link(filename)
+    puts "obtaining public-facing link for #{filename}"
+    begin
+      link_data = @client.media(filename)
+      puts "file available at #{link_data['url']}"
+      puts "until #{link_data['expires']}"
+    rescue DropboxError
+      puts "#{filename} not found!"
+      return false
+    end
+  end
+     
+  #helper function for download and retrive
+  #either returns file data or returns false
+  def get(filename)
+    begin
+      out = @client.get_file("#{filename}")
+    rescue DropboxError
+      puts "#{filename} not found!"
+      return false
+    end
+  end
+
+
+  #lists all files returned from query
+  #add behavior to open a file if there's only one result?
+  def search(search_term)
+    puts "searching nvCL for #{search_term}"
+    response = @client.search('/',"#{search_term}")    #returns metadata in JSON
+    if response.length>0
+      response.each do |i|
+        puts "> #{i['path'].sub('/','')}"
+      end
+    else
+      puts "no notes with the search term #{search_term} in your nvCL directory"
+    end
   end
 
 end
