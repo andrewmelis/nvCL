@@ -103,6 +103,11 @@ Public = lambda do |context, filename|
 
 end
 
+Remove = lambda do |context, filename|
+  puts "removing #{filename} from web"
+  puts context.network.remove(filename)
+end
+
 Help = lambda do |*args|
   puts "\n\n\n\nWelcome to nvCL, by Andrew Melis"
   puts "This project was made for CSPP51050\n\n"

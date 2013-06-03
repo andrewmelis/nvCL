@@ -31,6 +31,8 @@ class UI
         set_action &Edit
       elsif cmd == "n" || cmd == "new"
         set_action &Edit
+      elsif cmd == "r" || cmd == "remove"
+        set_action &Remove
       else
         # set_action &Append
         raise "come back later"

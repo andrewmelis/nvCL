@@ -45,6 +45,15 @@ class NetworkFacade
     end
   end
 
+  def remove(filename)
+    data = @network.remove(filename)
+    if !data
+      return "unable to delete #{filename} from web"
+    else
+      return "successfully deleted #{filename} from web"
+    end
+  end
+
   def delete_local(filename)
     if !@network.delete_local(filename)
       return "file not found"

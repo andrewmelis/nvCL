@@ -120,6 +120,14 @@ class NetworkLayer
     end
   end
 
+  def remove(filename)
+    begin
+      data = @client.file_delete("/#{filename}")
+    rescue DropboxError
+      return false
+    end
+  end
+
 
   def open_local(filename, edit)
     return ProcessLayer.open_local(filename,edit)
