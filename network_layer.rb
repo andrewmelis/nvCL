@@ -111,7 +111,7 @@ class NetworkLayer
 
   #retrieves temporary public-facing url for given filename
   #returns display data or false
-  def link(filename)
+  def public(filename)
     begin
       data = @client.media(filename)
     rescue DropboxError

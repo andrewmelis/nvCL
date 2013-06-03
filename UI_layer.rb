@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 require './strategies'
 require './network_facade'
 
@@ -14,8 +13,8 @@ class UI
       cmd = inputs[0].downcase
       if cmd == "d" || cmd == "download"
         set_action &Download
-      elsif cmd == "l" || cmd == "link"
-        set_action &Link
+      elsif cmd == "p" || cmd == "public"
+        set_action &Public
       elsif cmd == "s" || cmd == "search"
         set_action &Search
       elsif cmd == "u" || cmd == "upload"
@@ -31,16 +30,14 @@ class UI
         set_action &Help
       elsif cmd == "w" || cmd == "web"
         set_action &Web
-      elsif cmd == "list"
+      elsif cmd == "l" || cmd == "list"
         set_action &ListContents
-      # elsif cmd == 
       else
         raise "come back later"
+        #this will be search and open
       end
-
-    elsif inputs.size==1
+    elsif inputs.size==0
       set_action &ListContents
-
     else
       raise "input not recognized"
     end   
@@ -57,9 +54,4 @@ class UI
   end
 
 end
-
-ui = UI.new
-
-
-ui.run(ARGV)
 

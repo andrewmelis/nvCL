@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require './UI_layer'
+
+ui = UI.new
+
+ui.run(ARGV)

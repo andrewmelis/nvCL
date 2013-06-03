@@ -2,11 +2,16 @@ require './network_layer'
 
 class NetworkFacade
 
-  attr_reader :network
+  attr_accessor :network, :suspeded
 
   def initialize
     @network = NetworkLayer.new #takes care of making authorization
   end
+
+  def suspend
+    @suspeded = @network
+    @network = 
+
 
   def upload(filename)
     if !@network.upload(filename)
@@ -46,8 +51,8 @@ class NetworkFacade
     end
   end
 
-  def link(filename)
-    data = @network.link(filename)
+  def public(filename)
+    data = @network.public(filename)
     if !data
       return "error creating link from Dropbox"
     else
