@@ -1,11 +1,16 @@
 require './strategies'
 require './network_facade'
+require './network_observer'
 
 class UI
+  include ConnectionObserver
+
   attr_accessor :action, :network
 
   def initialize
     @network = NetworkFacade.new 
+    super()         #instantiate ConnectionObserver module
+    add_observer &ConnectionDown
   end
 
   def read_inputs(inputs)
@@ -33,8 +38,8 @@ class UI
       elsif cmd == "l" || cmd == "list"
         set_action &ListContents
       else
-        raise "come back later"
-        #this will be search and open
+        #eventually, this will be search and open
+        raise "input not recognized" #for now
       end
     elsif inputs.size==0
       set_action &ListContents
@@ -50,7 +55,15 @@ class UI
 
   def run(inputs)
     read_inputs(inputs)
+
+    #check connection
+    if !NetworkHelper.instance.check
+      notify_observers
+      return
+    end
+
     @action.call(self,inputs[1])
+
   end
 
 end

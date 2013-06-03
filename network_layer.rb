@@ -1,12 +1,17 @@
-
 require 'dropbox_sdk'
 require './process_layer'
+require './network_observer'
 
 class NetworkLayer
+  include ConnectionObserver
+
   attr_accessor :session, :client
   attr_reader :APP_KEY, :APP_SECRET, :ACCESS_TYPE
 
   def initialize
+    super()         #instantiate ConnectionObserver module
+    add_observer &ConnectionDown
+
     @APP_KEY = 'aonbfj90mc8ecnl'
     @APP_SECRET = 'zjdti8y6bubt6rw'
     @ACCESS_TYPE = :app_folder

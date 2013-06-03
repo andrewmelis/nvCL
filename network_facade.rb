@@ -1,17 +1,12 @@
 require './network_layer'
 
 class NetworkFacade
-
-  attr_accessor :network, :suspeded
+  include ConnectionObserver
+  attr_accessor :network
 
   def initialize
     @network = NetworkLayer.new #takes care of making authorization
   end
-
-  def suspend
-    @suspeded = @network
-    @network = 
-
 
   def upload(filename)
     if !@network.upload(filename)

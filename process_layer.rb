@@ -57,13 +57,15 @@ class ProcessLayer
   #TODO figure out if going to write to current directory or to bin
   def self.write_data(filename, out)
     unless out==false
-      File.open("#{@DIR}#{filename}", "w"){|f| f.puts out}
+      # File.open("#{@DIR}#{filename}", "w"){|f| f.puts out}
+      File.open("#{filename}", "w"){|f| f.puts out}
       return true
     end
     return false
   end
 
   #called after edits
+  #NOT IMPLEMENTED
   def self.delete(filename)
     if File.exists?("#{@DIR}#{filename}")
       File.delete("#{@DIR}#{filename}")
