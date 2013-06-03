@@ -9,6 +9,7 @@ class UI
 
   def initialize
     @network = NetworkFacade.new 
+    
     super()         #instantiate ConnectionObserver module
     add_observer &ConnectionDown
   end
@@ -24,6 +25,8 @@ class UI
         set_action &Search
       elsif cmd == "u" || cmd == "upload"
         set_action &Upload
+      elsif cmd == "o" || cmd == "open"
+        set_action &Open
       else
         # set_action &Append
         raise "come back later"
@@ -58,7 +61,7 @@ class UI
 
     #check connection
     if !NetworkHelper.instance.check
-      notify_observers
+      notify_observers                  #observer called
       return
     end
 

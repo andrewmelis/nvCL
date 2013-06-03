@@ -23,7 +23,7 @@ ListContents = lambda do |context, *args|
   if data.class == String
     puts data
   else
-    data['contents'].each do |i|
+    data['contents'].each do |i|              #this is, of course, a ruby internal iterator
       puts "> #{i['path'].sub('/','')}"
     end
   end
@@ -37,11 +37,28 @@ Search = lambda do |context, term|
   if data.class == String
     puts data
   else
-    data.each do |i|
+    data.each do |i|                          #another internal iterator
       puts "> #{i['path'].sub('/','')}"
     end
   end
 
+end
+
+Open = lambda do |context, filename|
+  context.set_action &Download
+  context.action.call(context,filename) #downloads file
+
+  puts "opening #{filename}"
+
+  # system("vim #{filename}")
+  context.network.open_local(filename)
+
+  context.set_action &Delete
+  context.action.call(context,filename)
+end
+
+Delete = lambda do |context, filename|
+  context.network.delete(filename)
 end
 
 Public = lambda do |context, filename|

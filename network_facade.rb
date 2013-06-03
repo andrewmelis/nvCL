@@ -1,7 +1,6 @@
 require './network_layer'
 
 class NetworkFacade
-  include ConnectionObserver
   attr_accessor :network
 
   def initialize
@@ -46,6 +45,12 @@ class NetworkFacade
     end
   end
 
+  def delete(filename)
+    if !@network.delete(filename)
+      return "file not found"
+    end
+  end
+
   def public(filename)
     data = @network.public(filename)
     if !data
@@ -54,6 +59,14 @@ class NetworkFacade
       return data
     end
   end
+
+  def open_local(filename, *edit)
+    val = @network.open_local(filename, edit)
+    puts val
+    return val
+  end
+
+
 
 end
 

@@ -67,9 +67,14 @@ class ProcessLayer
   #called after edits
   #NOT IMPLEMENTED
   def self.delete(filename)
-    if File.exists?("#{@DIR}#{filename}")
-      File.delete("#{@DIR}#{filename}")
-    else puts "file not found"
+    if File.exists?("#{filename}")
+      File.delete("#{filename}")
+
+    # if File.exists?("#{@DIR}#{filename}")
+    #   File.delete("#{@DIR}#{filename}")
+      return true
+    else 
+      return false
     end
   end
 

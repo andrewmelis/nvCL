@@ -1,16 +1,12 @@
 require 'dropbox_sdk'
 require './process_layer'
-require './network_observer'
 
 class NetworkLayer
-  include ConnectionObserver
 
   attr_accessor :session, :client
   attr_reader :APP_KEY, :APP_SECRET, :ACCESS_TYPE
 
   def initialize
-    super()         #instantiate ConnectionObserver module
-    add_observer &ConnectionDown
 
     @APP_KEY = 'aonbfj90mc8ecnl'
     @APP_SECRET = 'zjdti8y6bubt6rw'
@@ -122,6 +118,26 @@ class NetworkLayer
     rescue DropboxError
       return false
     end
+  end
+
+  def open_local(filename, *edit)
+    ext = File.extname("#{filename}")
+    
+    if ext == ".jpg" || ext == ".png"
+      system("open #{filename}")  #program ends here
+    elsif ext == ".txt" || ext == ".csv"
+      if edit
+        system("vim #{filename}") #returns true
+      else
+        system("cat #{filename}") #returns true
+      end
+    else
+      return false
+    end
+  end
+
+  def delete(filename)
+    return ProcessLayer.delete(filename)
   end
 
 end
