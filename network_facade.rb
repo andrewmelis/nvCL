@@ -45,8 +45,8 @@ class NetworkFacade
     end
   end
 
-  def delete(filename)
-    if !@network.delete(filename)
+  def delete_local(filename)
+    if !@network.delete_local(filename)
       return "file not found"
     end
   end
@@ -60,13 +60,13 @@ class NetworkFacade
     end
   end
 
-  def open_local(filename, *edit)
-    val = @network.open_local(filename, edit)
-    puts val
-    return val
+  def open_local(filename, edit)
+    return @network.open_local(filename, edit)
   end
 
-
+  def new_local(filename)
+    return @network.new_local(filename)
+  end
 
 end
 

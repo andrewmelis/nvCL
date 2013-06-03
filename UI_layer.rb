@@ -27,6 +27,10 @@ class UI
         set_action &Upload
       elsif cmd == "o" || cmd == "open"
         set_action &Open
+      elsif cmd == "e" || cmd == "edit"
+        set_action &Edit
+      elsif cmd == "n" || cmd == "new"
+        set_action &Edit
       else
         # set_action &Append
         raise "come back later"
@@ -41,8 +45,7 @@ class UI
       elsif cmd == "l" || cmd == "list"
         set_action &ListContents
       else
-        #eventually, this will be search and open
-        raise "input not recognized" #for now
+        set_action &Omnibar
       end
     elsif inputs.size==0
       set_action &ListContents
@@ -65,7 +68,11 @@ class UI
       return
     end
 
-    @action.call(self,inputs[1])
+    if(inputs[1]==nil)
+      @action.call(self,inputs[0])  #for omnibar
+    else
+      @action.call(self,inputs[1])
+    end
 
   end
 

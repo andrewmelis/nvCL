@@ -120,24 +120,17 @@ class NetworkLayer
     end
   end
 
-  def open_local(filename, *edit)
-    ext = File.extname("#{filename}")
-    
-    if ext == ".jpg" || ext == ".png"
-      system("open #{filename}")  #program ends here
-    elsif ext == ".txt" || ext == ".csv"
-      if edit
-        system("vim #{filename}") #returns true
-      else
-        system("cat #{filename}") #returns true
-      end
-    else
-      return false
-    end
+
+  def open_local(filename, edit)
+    return ProcessLayer.open_local(filename,edit)
   end
 
-  def delete(filename)
-    return ProcessLayer.delete(filename)
+  def new_local(filename)
+    return ProcessLayer.new_local(filename)
+  end
+
+  def delete_local(filename)
+    return ProcessLayer.delete_local(filename)
   end
 
 end

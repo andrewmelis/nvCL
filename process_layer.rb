@@ -1,4 +1,5 @@
 require "./network_layer"
+require 'fileutils'
 
 #the Process Layer does all file processing
 #on the local disk
@@ -66,7 +67,7 @@ class ProcessLayer
 
   #called after edits
   #NOT IMPLEMENTED
-  def self.delete(filename)
+  def self.delete_local(filename)
     if File.exists?("#{filename}")
       File.delete("#{filename}")
 
@@ -75,6 +76,37 @@ class ProcessLayer
       return true
     else 
       return false
+    end
+  end
+
+  def self.open_local(filename, edit)
+    ext = File.extname("#{filename}")
+    
+    if ext == ".jpg" || ext == ".png"
+      # Thread.new {system("open #{filename}")  }
+      system("open #{filename}")
+      sleep(2)    #to make sure can open file before delete
+      return "pic"
+    elsif ext == ".txt" || ext == ".csv"
+      if edit
+        system("vim #{filename}") #returns true
+      else
+        puts "\n\n\n\n#{filename}:\n==========================\n\n"
+        system("cat #{filename}") #returns true
+        puts "\n\n\n\n"
+      end
+    else
+      return false
+    end
+  end
+
+  def self.new_local(filename)
+    ext = File.extname("#{filename}")
+    if ext == ".txt" || ext == ".csv"
+      File.new("#{filename}", "w+")
+      system("vim #{filename}") #returns true
+    else
+      raise "omnibar creation behavior not supported for extensions other than .csv or .txt"
     end
   end
 
