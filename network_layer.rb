@@ -1,5 +1,6 @@
 #from https://www.dropbox.com/developers/app_info/321120
 require 'dropbox_sdk'
+require './process_layer'
 
 class NetworkLayer
   attr_accessor :session, :client
@@ -20,22 +21,18 @@ class NetworkLayer
       return
     end
 
-    #get unix $HOME directory
-    home = Dir.home
-
-    if(File.exists?("#{home}/bin/nvCL/token.txt"))
+    if ProcessLayer.have_credentials?
       puts "loading credentials"
-      token_string = File.open("#{home}/bin/nvCL/token.txt").read
-      @session = DropboxSession.deserialize(token_string)
+      @session = DropboxSession.deserialize(ProcessLayer.saved_credentials)
     else 
       puts "creating new credentials"
-      new_session(home)
+      new_session
     end
 
   end
 
   #after new_session, if authorized, 'Notational Data CL' folder in Dropbox/home/Apps directory
-  def new_session(home)
+  def new_session
 
     @session = DropboxSession.new(@APP_KEY, @APP_SECRET)
 
@@ -57,22 +54,7 @@ class NetworkLayer
     #this will fail if the user didn't visit the above url and hit 'Allow'
     access_token = @session.get_access_token #shouldn't need to get access token again unless reinstall app or revoke access from Dropbox website
 
-
-    #store session for later
-    if !Dir.exists?("#{home}/bin")
-      puts "creating new directory #{home}/bin"
-      Dir.mkdir("#{home}/bin")
-    end
-
-    if !Dir.exists?("#{home}/bin/nvCL")
-      puts "creating new directory #{home}/bin/nvCL"
-      Dir.mkdir("#{home}/bin/nvCL")
-    end
-
-    token_string = @session.serialize
-    File.open("#{home}/bin/nvCL/token.txt", 'w') do |f|
-      f.puts token_string
-    end
+    ProcessLayer.store_session(@session.serialize)
 
   end
 
@@ -110,22 +92,24 @@ class NetworkLayer
   #TODO come back to this
   def retrieve(filename)
     puts "retrieving #{filename} "
-    out = get(filename)
-    #pass the raw data back to another layer in this case? in all download cases? perhaps called process layer?
-    unless out==false
-      require 'tmpdir'
-      Dir.m
-      File.open("#{filename}", "w"){|f| f.puts out} #current iteration simply downloads file. must open in tmp vim file soon
+    begin
+      out = get(filename)
+    rescue
+      puts "error retrieving #{filename}"
     end
+
+    
   end
 
   #saves to current local directory
   def download(filename)
     puts "downloading #{filename} to local disk"
-    out = get(filename)
-    unless out==false
-      File.open("#{filename}", "w"){|f| f.puts out} 
+    begin
+      out = get(filename)
+    rescue
+      puts "error retrieving #{filename}"
     end
+   
   end
 
   #retrieves temporary public-facing url for given filename
