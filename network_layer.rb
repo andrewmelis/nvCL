@@ -1,4 +1,4 @@
-#from https://www.dropbox.com/developers/app_info/321120
+
 require 'dropbox_sdk'
 require './process_layer'
 
@@ -15,7 +15,7 @@ class NetworkLayer
     @client = DropboxClient.new(@session, @ACCESS_TYPE)
   end
 
-  ###AUTHENTICATING THE APP### 
+  ###AUTHENTICATING THE APP###
   def load_session
     if !@session.nil? && @session.authorized?
       return
@@ -24,14 +24,17 @@ class NetworkLayer
     if ProcessLayer.have_credentials?
       puts "loading credentials"
       @session = DropboxSession.deserialize(ProcessLayer.saved_credentials)
-    else 
+    else
       puts "creating new credentials"
       new_session
     end
 
+    puts "credentials loaded properly"
+
   end
 
   #after new_session, if authorized, 'Notational Data CL' folder in Dropbox/home/Apps directory
+  #from https://www.dropbox.com/developers/app_info/321120
   def new_session
 
     @session = DropboxSession.new(@APP_KEY, @APP_SECRET)
@@ -58,96 +61,61 @@ class NetworkLayer
 
   end
 
+  #####################
+  #ACTION METHODS
+  #####################
+
   #uploading files
   #will overwrite a file of the same name
-  #do I want to enable sending string functionality?
+  #returns true/false
   def upload(filename)
     begin
       file = File.open("#{filename}")
       response = @client.put_file("/#{filename}",file,true)
-      puts "uploaded: #{filename}"
+      return true
     rescue
-      puts "#{filename} not found"
-    end
-  end
-
-  #helper function used in list_contents() and search()
-  def print_metadata(metadata)
-
-  end
-
-  def list_contents
-    puts "listing contents of dropbox nvCL directory"
-    file_metadata = @client.metadata('/')
-    if file_metadata['contents'].length>0
-      file_metadata['contents'].each do |i|
-        puts "> #{i['path'].sub('/','')}"
-      end
-    else
-      puts "no notes in your nvCL directory"
-    end    
-  end
-
-  #retrieves file for quick, "in-place" editing
-  #TODO come back to this
-  def retrieve(filename)
-    puts "retrieving #{filename} "
-    begin
-      out = get(filename)
-    rescue
-      puts "error retrieving #{filename}"
-    end
-
-    
-  end
-
-  #saves to current local directory
-  def download(filename)
-    puts "downloading #{filename} to local disk"
-    begin
-      out = get(filename)
-    rescue
-      puts "error retrieving #{filename}"
-    end
-   
-  end
-
-  #retrieves temporary public-facing url for given filename
-  def link(filename)
-    puts "obtaining public-facing link for #{filename}"
-    begin
-      link_data = @client.media(filename)
-      puts "file available at #{link_data['url']}"
-      puts "until #{link_data['expires']}"
-    rescue DropboxError
-      puts "#{filename} not found!"
       return false
     end
   end
-     
+
   #helper function for download and retrive
-  #either returns file data or returns false
+  #returns true/false
   def get(filename)
     begin
       out = @client.get_file("#{filename}")
     rescue DropboxError
-      puts "#{filename} not found!"
+      return false
+    end
+    ProcessLayer.write_data(filename,out) #returns true/false
+  end
+
+  #lists all files in nvCL directory
+  #returns display data or false
+  def list_contents
+    begin
+      data = @client.metadata('/') #returns this
+    rescue DropboxError
       return false
     end
   end
 
-
   #lists all files returned from query
-  #add behavior to open a file if there's only one result?
+  #returns display data or false
   def search(search_term)
-    puts "searching nvCL for #{search_term}"
-    response = @client.search('/',"#{search_term}")    #returns metadata in JSON
-    if response.length>0
-      response.each do |i|
-        puts "> #{i['path'].sub('/','')}"
-      end
-    else
-      puts "no notes with the search term #{search_term} in your nvCL directory"
+    begin
+      data = @client.search('/',"#{search_term}")    #returns metadata in JSON
+    rescue DropboxError
+      return false
+    end
+  end
+
+  #retrieves temporary public-facing url for given filename
+  #returns display data or false
+  def link(filename)
+    begin
+      data = @client.media(filename)
+    rescue DropboxError
+      return false
     end
   end
 

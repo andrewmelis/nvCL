@@ -8,9 +8,9 @@ class ProcessLayer
   @home = Dir.home
   @DIR = "#{@home}/bin/nvCL/"
 
-  #
+  ##############################
   #network setup helper methods
-  #
+  ##############################
   def self.have_credentials?
     if(File.exists?("#{@home}/bin/nvCL/.token.txt"))
       return true
@@ -49,13 +49,18 @@ class ProcessLayer
     end
   end
 
-  #
+  ##############################
   #network output helper methods
-  #
+  ##############################
+
+  #used in retrieve
+  #TODO figure out if going to write to current directory or to bin
   def self.write_data(filename, out)
     unless out==false
       File.open("#{@DIR}#{filename}", "w"){|f| f.puts out}
+      return true
     end
+    return false
   end
 
   #called after edits
@@ -66,35 +71,4 @@ class ProcessLayer
     end
   end
 
-  def self.parse_search(response)
-    if response.length>0
-      #call UI layer
-      response.each do |i|
-        puts "> #{i['path'].sub('/','')}"
-      end
-    else
-      #send error to UI layer
-    end
-  end
-
-  def self.parse_list(metadata)
-    if metadata['contents'].length>0
-      file_metadata['contents'].each do |i|
-        puts "> #{i['path'].sub('/','')}"
-      end#call UI layer
-
-    else
-      #send error to UI layer
-    end
-  end
-
-  def self.parse_link(media)
-    if media['url']!= nil
-      #call UI layer
-      puts "file available at #{link_data['url']}"
-      puts "until #{link_data['expires']}"
-    else
-      #send error to UI layer
-    end
-  end
 end
