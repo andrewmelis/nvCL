@@ -78,9 +78,11 @@ Web = lambda do |*args|
   exec('open https://www.dropbox.com/home/Apps/Notational\ Data\ CL')
 end
 
-History = lambda do |*args|
-  system('cat ~/bin/nvCL/.history.txt')
-end
+
+#not yet implemented
+# History = lambda do |*args|
+#   system('cat ~/bin/nvCL/.history.txt')
+# end
 
 
 
