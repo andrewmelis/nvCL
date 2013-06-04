@@ -57,7 +57,7 @@ Patterns:
   -Singleton (Network Helper)
 
 
-Enjoy!
+##Enjoy!
 
 Feel free to contact me at andrewmelis@gmail.com with questions
 
