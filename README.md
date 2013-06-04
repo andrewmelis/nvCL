@@ -35,6 +35,16 @@ Example:
 
     export PATH=${PATH}:/Users/andrewmelis/bin/nvCL   //in ~/.bash_profile
 
+
+Patterns:
+  Architecture Pattern:	  Layers    (UI, Network, Processing)
+
+  Design Patterns:	  Facade    (Network Facade)
+			  Strategy  (UI Strategies)
+			  Observer  (Network Observer)
+			  Singleton (Network Helper)
+
+
 Enjoy!
 
 Feel free to contact me at andrewmelis@gmail.com with questions
