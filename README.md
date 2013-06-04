@@ -8,6 +8,7 @@ available at http://notational.net/.
 All credit to him for creating an amazing app.
 
 Notes:
+-------------
 
 1) This app was written in Ruby 2.0.0p0.
    Other versions of Ruby have not been tested.
@@ -23,13 +24,13 @@ Notes:
    All files will then be stored in the Apps/Notational Data CL folder
 
 Install:
+----------------
 
+Remember to update your import statements in each file if you create a global shortcut.
 To install, download the app. I recommend moving the included files to ~/bin/nvCL.
 
 You can make a global shortcut to the app by setting your $PATH to include
 the directory where you plan to store the nvCL folder.
-
-Remember to update your import statements in each file if you create a global shortcut.
 
 
 Example:
@@ -42,12 +43,14 @@ Example:
 
 
 Patterns:
+-----------------
+
   Architecture Pattern:	  Layers    (UI, Network, Processing)
 
-  Design Patterns:	  Facade    (Network Facade)
-			  Strategy  (UI Strategies)
-			  Observer  (Network Observer)
-			  Singleton (Network Helper)
+  Design Patterns:	  1. Facade    (Network Facade)
+			  2. Strategy  (UI Strategies)
+			  3. Observer  (Network Observer)
+			  4. Singleton (Network Helper)
 
 
 Enjoy!
