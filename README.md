@@ -45,14 +45,16 @@ Example:
 Patterns:
 -----------------
 
-  Architecture Pattern:	  Layers    (UI, Network, Processing)
+  Architecture Pattern:	  
+  
+  -Layers    (UI, Network, Processing)
 
   Design Patterns:	  
   
-			  1. Facade    (Network Facade)
-			  2. Strategy  (UI Strategies)
-			  3. Observer  (Network Observer)
-			  4. Singleton (Network Helper)
+  -Facade    (Network Facade)
+  -Strategy  (UI Strategies)
+  -Observer  (Network Observer)
+  -Singleton (Network Helper)
 
 
 Enjoy!
