@@ -47,7 +47,9 @@ Patterns:
 
   Architecture Pattern:	  Layers    (UI, Network, Processing)
 
-  Design Patterns:	  1. Facade    (Network Facade)
+  Design Patterns:	  
+  
+			  1. Facade    (Network Facade)
 			  2. Strategy  (UI Strategies)
 			  3. Observer  (Network Observer)
 			  4. Singleton (Network Helper)
