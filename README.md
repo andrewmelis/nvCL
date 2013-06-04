@@ -29,11 +29,16 @@ To install, download the app. I recommend moving the included files to ~/bin/nvC
 You can make a global shortcut to the app by setting your $PATH to include
 the directory where you plan to store the nvCL folder.
 
+Remember to update your import statements in each file if you create a global shortcut.
+
+
 Example:
   
     export $PATH = ~/bin/nvCL			      //on command line
 
     export PATH=${PATH}:/Users/andrewmelis/bin/nvCL   //in ~/.bash_profile
+    
+    require './UI_layer'  =>  require '~/bin/nvCL/UI_layer'
 
 
 Patterns:
