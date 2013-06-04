@@ -45,11 +45,11 @@ Example:
 Patterns:
 -----------------
 
-  ###Architecture Pattern:	  
+###Architecture Pattern:	  
   
   -Layers    (UI, Network, Processing)
 
-  ###Design Patterns:	  
+###Design Patterns:	  
   
   -Facade    (Network Facade)  
   -Strategy  (UI Strategies)  
